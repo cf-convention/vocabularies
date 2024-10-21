@@ -155,6 +155,25 @@
             document.getElementById("status").innerText =
               `KWIC (Keyword in Context) Index for CF Standard Names, v${tableVersion}`;
             document.body.appendChild(kwicTable);
+
+            // enable downloading
+            const kiwcHtml = document.documentElement.cloneNode(true);
+            kiwcHtml
+              .querySelectorAll("script")
+              .forEach((script) => script.remove());
+            kiwcHtml.querySelector("#download_link").remove();
+            const downloadBlob = new Blob(
+              [`<html>${kiwcHtml.innerHTML}</html>`],
+              { type: "text/html" },
+            );
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(downloadBlob);
+            link.innerText = "Download Index File";
+            link.download = `kwik_index_standard_name_table_${tableVersion}.html`;
+            link.style.textDecoration = "revert";
+            link.style.color = "revert";
+
+            document.querySelector("#download_link").appendChild(link);
           })
           .catch(() => {
             document.getElementById("status").innerText =
@@ -166,6 +185,7 @@
 
   <body>
     <h1 id="status">Loading Standard Name Table</h1>
+    <p><span id="download_link"></span></p>
     <dl id="alpha"></dl>
   </body>
 </html>
