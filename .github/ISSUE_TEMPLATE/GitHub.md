@@ -1,7 +1,7 @@
 ---
 name: GitHub
 about: For proposing changes to the the use of GitHub in this repository
-title: *add your own title here*
+title: "*add your own title here*"
 labels: GitHub
 assignees: ''
 
