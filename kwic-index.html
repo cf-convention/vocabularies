@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>CF Standard Name KWIC Index</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+      }
+      dt {
+        font-weight: bold;
+      }
+      dd {
+        display: inline-block;
+        margin-left: 0.5em;
+      }
+      tr > :first-child {
+        text-align: right;
+      }
+      tr {
+        padding: 0;
+      }
+      table {
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      a[name] {
+        color: red;
+      }
+
+      a {
+        text-decoration: none;
+        color: black;
+      }
+      a:hover {
+        background-color: yellow;
+      }
+    </style>
+    <script>
+      window.onload = () => {
+        const ignore = new Set(["of", "to", "due", "from", "in", "and"]);
+        const params = new URLSearchParams(window.location.search);
+        let tableURI = params.get("tableURI");
+        //default to current name table
+        if (tableURI === null) {
+          tableURI =
+            "https://cfconventions.org/Data/cf-standard-names/current/src/cf-standard-name-table.xml";
+        }
+
+        fetch(tableURI)
+          .then((response) => {
+            document.getElementById("status").innerText =
+              "Indexing Standard Name Table";
+            return response.text();
+          })
+          .then((xml) => {
+            const kwicTable = document.createElement("table");
+
+            const alphaDL = document.getElementById("alpha");
+            const xmlParser = new DOMParser();
+            const standardNameTable = xmlParser.parseFromString(
+              xml,
+              "text/xml",
+            );
+
+            const keyWords = new Set();
+            const standardNames = new Array();
+            const keywordGroups = new Map();
+            const tableVersion =
+              standardNameTable.querySelectorAll("version_number")[0].innerHTML;
+
+            standardNameTable
+              .querySelectorAll("entry")
+              .forEach((standardNameEntry) => {
+                const standardName = standardNameEntry.id;
+                standardNames.push(standardName);
+              });
+
+            standardNames.sort();
+
+            standardNames.forEach((standardName) => {
+              const tokens = standardName.split("_");
+              const tokenSet = new Set(tokens).difference(ignore);
+              tokenSet.forEach((token) => {
+                keyWords.add(token);
+                if (!keywordGroups.has(token)) {
+                  keywordGroups.set(token, new Array());
+                }
+                keywordGroups.get(token).push(standardName);
+              });
+            });
+
+            const sortedTokens = Array.from(keyWords).sort();
+
+            // Make the alpha index at the top also sort
+            const alphaGroups = Map.groupBy(sortedTokens, (token) => {
+              return token.charAt(0);
+            });
+            alphaGroups.forEach((group, alpha) => {
+              const dt = document.createElement("dt");
+              dt.innerText = alpha;
+              alphaDL.appendChild(dt);
+              group.forEach((term) => {
+                const dd = document.createElement("dd");
+                const a = document.createElement("a");
+                a.innerText = term;
+                a.href = `#${term}`;
+                dd.appendChild(a);
+                alphaDL.appendChild(dd);
+              });
+            });
+
+            const underBar = document.createTextNode("_");
+            sortedTokens.forEach((keyword) => {
+              let names = keywordGroups.get(keyword);
+              names.forEach((name, nameIdx) => {
+                const tr = kwicTable.insertRow();
+
+                const leftCell = tr.insertCell();
+
+                const rightCell = tr.insertCell();
+                const tokens = name.split("_");
+
+                let seenKW = false;
+
+                tokens.forEach((token, index, arr) => {
+                  let elm;
+                  if (keyWords.has(token)) {
+                    elm = document.createElement("a");
+                    elm.href = `#${token}`;
+                    elm.innerText = token;
+                  } else {
+                    elm = document.createTextNode(token);
+                  }
+                  if (token === keyword) {
+                    seenKW = true;
+                    elm.setAttribute("name", keyword);
+                  }
+
+                  if (seenKW) {
+                    rightCell.appendChild(elm);
+                    if (index !== arr.length - 1) {
+                      rightCell.appendChild(underBar.cloneNode());
+                    }
+                  } else {
+                    leftCell.appendChild(elm);
+                    leftCell.appendChild(underBar.cloneNode());
+                  }
+                });
+              });
+            });
+            document.getElementById("status").innerText =
+              `KWIC (Keyword in Context) Index for CF Standard Names, v${tableVersion}`;
+            document.body.appendChild(kwicTable);
+
+            // enable downloading
+            const kiwcHtml = document.documentElement.cloneNode(true);
+            kiwcHtml
+              .querySelectorAll("script")
+              .forEach((script) => script.remove());
+            kiwcHtml.querySelector("#download_link").remove();
+            const downloadBlob = new Blob(
+              [`<html>${kiwcHtml.innerHTML}</html>`],
+              { type: "text/html" },
+            );
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(downloadBlob);
+            link.innerText = "Download Index File";
+            link.download = `kwik_index_standard_name_table_${tableVersion}.html`;
+            link.style.textDecoration = "revert";
+            link.style.color = "revert";
+
+            document.querySelector("#download_link").appendChild(link);
+          })
+          .catch(() => {
+            document.getElementById("status").innerText =
+              "Error Loading or Indexing Standard Name Table";
+          });
+      };
+    </script>
+  </head>
+
+  <body>
+    <h1 id="status">Loading Standard Name Table</h1>
+    <p><span id="download_link"></span></p>
+    <dl id="alpha"></dl>
+  </body>
+</html>
