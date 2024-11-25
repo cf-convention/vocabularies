@@ -11,10 +11,36 @@
         <head>
         <!-- Put something useful into the Title -->
         <title>CF area types</title>
+        <script>
+        window.onload = () => {
+            const tableVersion = `<xsl:value-of select="version_number"/>`;
+            const html = document.documentElement.cloneNode(true);
+            html
+              .querySelectorAll("script")
+              .forEach((script) => script.remove());
+            html.querySelector("#download_link").remove();
+            const downloadBlob = new Blob(
+              [`<html>${html.innerHTML}</html>`],
+              { type: "text/html" },
+            );
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(downloadBlob);
+            link.innerText = "Download Index File";
+            link.download = `area-type-table-${tableVersion}.html`;
+            link.style.textDecoration = "revert";
+            link.style.color = "revert";
+
+            document.querySelector("#download_link").appendChild(link);
+        }
+        </script>
         </head>
         <body>
+        <p>
             <b>Version <xsl:value-of select="version_number"/>, <xsl:value-of select="date"/></b>
-            <br/>
+        </p>
+        <p>
+            <span id="download_link"></span>
+        </p>
             <table id="area_type_table" border="1" width="100%" cellpadding="2" cellspacing="0">
                 <th width="100%">Area Type</th>
                 <xsl:apply-templates select="entry"/>
