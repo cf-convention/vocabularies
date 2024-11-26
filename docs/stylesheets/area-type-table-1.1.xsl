@@ -22,7 +22,7 @@
               .forEach((script) => script.remove());
             html.querySelector("#download_link").remove();
             const downloadBlob = new Blob(
-              [`<html>${html.innerHTML}</html>`],
+              [<![CDATA["<html>"]]>, html.innerHTML, <![CDATA["</html>"]]>],
               { type: "text/html" },
             );
             const link = document.createElement("a");
