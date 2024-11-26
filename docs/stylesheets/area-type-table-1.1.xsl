@@ -1,5 +1,6 @@
 <?xml version='1.0'?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:output method="html" doctype-system="about:legacy-compat" />
 
     <xsl:template match="/">
         <html>
@@ -11,10 +12,11 @@
         <head>
         <!-- Put something useful into the Title -->
         <title>CF area types</title>
-        <script>
-        window.onload = () => {
+        <script type="text/javascript">
+        const injectDownloadLink = () => {
             const tableVersion = `<xsl:value-of select="version_number"/>`;
             const html = document.documentElement.cloneNode(true);
+            console.log(html);
             html
               .querySelectorAll("script")
               .forEach((script) => script.remove());
@@ -25,13 +27,21 @@
             );
             const link = document.createElement("a");
             link.href = URL.createObjectURL(downloadBlob);
-            link.innerText = "Download Index File";
+            link.innerText = "Download HTML Table";
             link.download = `area-type-table-${tableVersion}.html`;
             link.style.textDecoration = "revert";
             link.style.color = "revert";
 
             document.querySelector("#download_link").appendChild(link);
         }
+        const tryRunWhenReady = () => {
+            if (document.readyState === "complete") {
+               injectDownloadLink();
+            } else {
+                setTimeout(tryRunWhenReady, 10)
+            }
+        }
+        tryRunWhenReady()
         </script>
         </head>
         <body>
