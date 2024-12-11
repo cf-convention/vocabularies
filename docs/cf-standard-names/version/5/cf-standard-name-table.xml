@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
- <?xml-stylesheet type="text/xsl" href="https://www.andrewbarna.org/cf-vocabularies/stylesheets/cf-standard-name-table-1.3.xsl" ?>
+ <?xml-stylesheet type="text/xsl" href="https://cfconventions.org/vocabularies/stylesheets/cf-standard-name-table-1.3.xsl" ?>
 <standard_name_table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="CFStandardNameTable-1.1.xsd">
   <version_number>5</version_number>
   <last_modified>2007-05-12T02:00:00Z</last_modified>
