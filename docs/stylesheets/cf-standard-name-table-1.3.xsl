@@ -30,7 +30,7 @@
             const link = document.createElement("a");
             link.href = URL.createObjectURL(downloadBlob);
             link.innerText = "Download HTML Table";
-            link.download = `area-type-table-${tableVersion}.html`;
+            link.download = `cf-standard-name-table-${tableVersion}.html`;
             link.style.textDecoration = "revert";
             link.style.color = "revert";
 
