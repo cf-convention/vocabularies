@@ -41,7 +41,31 @@
     </style>
     <script>
       window.onload = () => {
-        const ignore = new Set(["of", "to", "due", "from", "in", "and"]);
+        const ignore = new Set([
+          "and",
+          "or",
+          "the",
+          "a",
+          "an",
+          "as",
+          "at",
+          "in",
+          "be",
+          "because",
+          "between",
+          "by",
+          "can",
+          "for",
+          "of",
+          "due",
+          "from",
+          "during",
+          "than",
+          "that",
+          "The",
+          "to",
+          "with",
+        ]);
         const params = new URLSearchParams(window.location.search);
         let tableURI = params.get("tableURI");
         //default to current name table
