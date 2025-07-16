@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -41,13 +41,36 @@
     </style>
     <script>
       window.onload = () => {
-        const ignore = new Set(["of", "to", "due", "from", "in", "and"]);
+        const ignore = new Set([
+          "and",
+          "or",
+          "the",
+          "a",
+          "an",
+          "as",
+          "at",
+          "in",
+          "be",
+          "because",
+          "between",
+          "by",
+          "can",
+          "for",
+          "of",
+          "due",
+          "from",
+          "during",
+          "than",
+          "that",
+          "The",
+          "to",
+          "with",
+        ]);
         const params = new URLSearchParams(window.location.search);
         let tableURI = params.get("tableURI");
         //default to current name table
         if (tableURI === null) {
-          tableURI =
-            "https://cfconventions.org/Data/cf-standard-names/current/src/cf-standard-name-table.xml";
+          tableURI = "../current/cf-standard-name-table.xml";
         }
 
         fetch(tableURI)
@@ -63,7 +86,7 @@
             const xmlParser = new DOMParser();
             const standardNameTable = xmlParser.parseFromString(
               xml,
-              "text/xml",
+              "text/xml"
             );
 
             const keyWords = new Set();
@@ -152,8 +175,9 @@
                 });
               });
             });
-            document.getElementById("status").innerText =
-              `KWIC (Keyword in Context) Index for CF Standard Names, v${tableVersion}`;
+            document.getElementById(
+              "status"
+            ).innerText = `KWIC (Keyword in Context) Index for CF Standard Names, v${tableVersion}`;
             document.body.appendChild(kwicTable);
 
             // enable downloading
@@ -164,7 +188,7 @@
             kiwcHtml.querySelector("#download_link").remove();
             const downloadBlob = new Blob(
               [`<html>${kiwcHtml.innerHTML}</html>`],
-              { type: "text/html" },
+              { type: "text/html" }
             );
             const link = document.createElement("a");
             link.href = URL.createObjectURL(downloadBlob);
