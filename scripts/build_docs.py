@@ -7,12 +7,13 @@
 # ]
 # ///
 
-from collections import defaultdict
-import click
-from pathlib import Path
 import shutil
-from lxml import etree
+from collections import defaultdict
+from pathlib import Path
+
+import click
 from jinja2 import Template
+from lxml import etree
 
 vocabularies = (
     "area-type-table",
@@ -78,11 +79,16 @@ index_template = Template("""\
 """)
 
 build_uri_prefix = "https://cfconventions.org/vocabularies/"
-    
+
 
 @click.command()
-@click.argument('root', type=click.Path(exists=True, file_okay=False, readable=True, writable=True, path_type=Path))
-def build(root:Path):
+@click.argument(
+    "root",
+    type=click.Path(
+        exists=True, file_okay=False, readable=True, writable=True, path_type=Path,
+    ),
+)
+def build(root: Path):
     src_dir = root / "docs"
     build_dir = root / "_build"
 
@@ -91,14 +97,14 @@ def build(root:Path):
     build_dir.mkdir()
 
     for base, dirs, files in src_dir.walk():
-        for file in files: 
+        for file in files:
             src_file = base / file
             destination = build_dir / src_file.relative_to(src_dir)
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src_file, destination)
 
     vocab_versions = defaultdict(list)
-    
+
     for vocab in vocabularies:
         vocab_dir = src_dir / vocab
         version_dir = vocab_dir / "version"
@@ -113,21 +119,24 @@ def build(root:Path):
             version = int(dir.name)
             vocab_versions[vocab].append(version)
             current_version = max(version, current_version)
-    
+
         current_version_dir = version_dir / str(current_version)
         shutil.copytree(current_version_dir, current_dir)
 
         current_xml = list(current_version_dir.glob("*.xml"))[0]
         xml = etree.parse(current_xml)
-        stylesheet: str = xml.xpath("/processing-instruction('xml-stylesheet')")[0].attrib["href"]
+        stylesheet: str = xml.xpath("/processing-instruction('xml-stylesheet')")[
+            0
+        ].attrib["href"]
         stylesheet = stylesheet.removeprefix(build_uri_prefix)
         stylesheet_path = build_dir / stylesheet
-        
+
         html = xml.xslt(etree.parse(stylesheet_path))
         current_index.write_bytes(html)
 
-    root_index = build_dir / "index.html" 
+    root_index = build_dir / "index.html"
     root_index.write_text(index_template.render(context=vocab_versions))
+
 
 if __name__ == "__main__":
     build()
