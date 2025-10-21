@@ -28,7 +28,7 @@ jobs:
           enable-cache: true
 
       - name: Run Build Script
-        run: uv run --script scripts/build_docs.py
+        run: uv run --script scripts/build_docs.py ./
       
       - name: Upload static files as artifact
         id: deployment
