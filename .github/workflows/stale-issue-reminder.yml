@@ -21,7 +21,7 @@ jobs:
         days-before-close: -1   # disabled
         only-issue-labels: standard name
         stale-issue-message: |
-          This issue has had no activity in the last 30 days. Accordingly:
+          This issue has had no activity in the last 3 weeks. Accordingly:
 
           * If you proposed this issue or have contributed to the
             discussion, please reply to any outstanding concerns.
@@ -31,8 +31,8 @@ jobs:
             wait for the moderators to take the next steps towards
             acceptance.
             
-          Standard name moderators are also reminded to review @feggleton @japamment @efisher008
+          Standard name moderators are also reminded to review @feggleton @japamment
 
-        days-before-stale: 30
+        days-before-stale: 21
         exempt-all-assignees: true
-        stale-issue-label: moderator attention
+        stale-issue-label: attention required
