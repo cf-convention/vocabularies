@@ -2,7 +2,7 @@ name: Build and Publish Vocabularies
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
   workflow_dispatch:
 
