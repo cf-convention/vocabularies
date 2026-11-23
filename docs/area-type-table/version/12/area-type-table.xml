@@ -2,6 +2,7 @@
  <?xml-stylesheet type="text/xsl" href="https://cfconventions.org/vocabularies/stylesheets/area-type-table-1.1.xsl" ?>
 <area_type_table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="area-type-table-1.1.xsd">
   <title>Area Type Table</title>
+  <script src="https://cfconventions.org/vocabularies/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
   <version_number>12</version_number>
   <date>21 January 2025</date>
   <institution>Centre for Environmental Data Analysis</institution>

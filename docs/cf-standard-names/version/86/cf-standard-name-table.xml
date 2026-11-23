@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
  <?xml-stylesheet type="text/xsl" href="https://cfconventions.org/vocabularies/stylesheets/cf-standard-name-table-1.3.xsl" ?>
    <standard_name_table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://cfconventions.org/Data/schema-files/cf-standard-name-table-2.0.xsd">
+  <script src="https://cfconventions.org/vocabularies/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
    <version_number>86</version_number>
    <conventions>CF-StandardNameTable-86</conventions>
    <first_published>2024-09-05T10:52:50Z</first_published>
